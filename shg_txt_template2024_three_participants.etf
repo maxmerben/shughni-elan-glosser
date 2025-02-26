@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ANNOTATION_DOCUMENT AUTHOR="unspecified"
+    DATE="2025-02-12T19:43:07+03:00" FORMAT="3.0" VERSION="3.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.mpi.nl/tools/elan/EAFv3.0.xsd">
+    <HEADER MEDIA_FILE="" TIME_UNITS="milliseconds"/>
+    <TIME_ORDER/>
+    <TIER LANG_REF="sgh" LINGUISTIC_TYPE_REF="phrase-txt-sgh"
+        PARTICIPANT="A" TIER_ID="A_phrase-txt-sgh"/>
+    <TIER LANG_REF="ru" LINGUISTIC_TYPE_REF="phrase-txt-ru"
+        PARENT_REF="A_phrase-txt-sgh" TIER_ID="A_phrase-txt-ru"/>
+    <TIER LANG_REF="sgh" LINGUISTIC_TYPE_REF="word-txt-sgh"
+        PARENT_REF="A_phrase-txt-sgh" TIER_ID="A_word-txt-sgh"/>
+    <TIER LANG_REF="sgh" LINGUISTIC_TYPE_REF="morph-txt-sgh"
+        PARENT_REF="A_word-txt-sgh" TIER_ID="A_morph-txt-sgh"/>
+    <TIER LANG_REF="en" LINGUISTIC_TYPE_REF="morph-gls-en"
+        PARENT_REF="A_morph-txt-sgh" TIER_ID="A_morph-gls-en"/>
+    <TIER LANG_REF="en" LINGUISTIC_TYPE_REF="morph-pos-en"
+        PARENT_REF="A_morph-txt-sgh" TIER_ID="A_morph-pos-en"/>
+    <TIER LANG_REF="sgh" LINGUISTIC_TYPE_REF="phrase-txt-sgh"
+        PARTICIPANT="B" TIER_ID="B_phrase-txt-sgh"/>
+    <TIER LANG_REF="ru" LINGUISTIC_TYPE_REF="phrase-txt-ru"
+        PARENT_REF="B_phrase-txt-sgh" TIER_ID="B_phrase-txt-ru"/>
+    <TIER LANG_REF="sgh" LINGUISTIC_TYPE_REF="word-txt-sgh"
+        PARENT_REF="B_phrase-txt-sgh" TIER_ID="B_word-txt-sgh"/>
+    <TIER LANG_REF="sgh" LINGUISTIC_TYPE_REF="morph-txt-sgh"
+        PARENT_REF="B_word-txt-sgh" TIER_ID="B_morph-txt-sgh"/>
+    <TIER LANG_REF="en" LINGUISTIC_TYPE_REF="morph-gls-en"
+        PARENT_REF="B_morph-txt-sgh" TIER_ID="B_morph-gls-en"/>
+    <TIER LANG_REF="en" LINGUISTIC_TYPE_REF="morph-pos-en"
+        PARENT_REF="B_morph-txt-sgh" TIER_ID="B_morph-pos-en"/>
+    <TIER LANG_REF="sgh" LINGUISTIC_TYPE_REF="phrase-txt-sgh"
+        PARTICIPANT="C" TIER_ID="C_phrase-txt-sgh"/>
+    <TIER LANG_REF="ru" LINGUISTIC_TYPE_REF="phrase-txt-ru"
+        PARENT_REF="C_phrase-txt-sgh" TIER_ID="C_phrase-txt-ru"/>
+    <TIER LANG_REF="sgh" LINGUISTIC_TYPE_REF="word-txt-sgh"
+        PARENT_REF="C_phrase-txt-sgh" TIER_ID="C_word-txt-sgh"/>
+    <TIER LANG_REF="sgh" LINGUISTIC_TYPE_REF="morph-txt-sgh"
+        PARENT_REF="C_word-txt-sgh" TIER_ID="C_morph-txt-sgh"/>
+    <TIER LANG_REF="en" LINGUISTIC_TYPE_REF="morph-gls-en"
+        PARENT_REF="C_morph-txt-sgh" TIER_ID="C_morph-gls-en"/>
+    <TIER LANG_REF="en" LINGUISTIC_TYPE_REF="morph-pos-en"
+        PARENT_REF="C_morph-txt-sgh" TIER_ID="C_morph-pos-en"/>
+    <LINGUISTIC_TYPE CONSTRAINTS="Symbolic_Association"
+        GRAPHIC_REFERENCES="false" LINGUISTIC_TYPE_ID="morph-gls-en" TIME_ALIGNABLE="false"/>
+    <LINGUISTIC_TYPE CONSTRAINTS="Symbolic_Association"
+        GRAPHIC_REFERENCES="false" LINGUISTIC_TYPE_ID="morph-pos-en" TIME_ALIGNABLE="false"/>
+    <LINGUISTIC_TYPE CONSTRAINTS="Symbolic_Subdivision"
+        GRAPHIC_REFERENCES="false" LINGUISTIC_TYPE_ID="word-txt-sgh" TIME_ALIGNABLE="false"/>
+    <LINGUISTIC_TYPE CONSTRAINTS="Symbolic_Subdivision"
+        GRAPHIC_REFERENCES="false" LINGUISTIC_TYPE_ID="morph-txt-sgh" TIME_ALIGNABLE="false"/>
+    <LINGUISTIC_TYPE GRAPHIC_REFERENCES="false"
+        LINGUISTIC_TYPE_ID="phrase-txt-sgh" TIME_ALIGNABLE="true"/>
+    <LINGUISTIC_TYPE CONSTRAINTS="Symbolic_Association"
+        GRAPHIC_REFERENCES="false" LINGUISTIC_TYPE_ID="phrase-txt-ru" TIME_ALIGNABLE="false"/>
+    <LINGUISTIC_TYPE CONSTRAINTS="Symbolic_Association"
+        GRAPHIC_REFERENCES="false" LINGUISTIC_TYPE_ID="phrase-txt-sgh-2" TIME_ALIGNABLE="false"/>
+    <LANGUAGE LANG_DEF="ru" LANG_ID="ru" LANG_LABEL="ru"/>
+    <LANGUAGE LANG_DEF="sgh" LANG_ID="sgh" LANG_LABEL="sgh"/>
+    <LANGUAGE LANG_DEF="en" LANG_ID="en" LANG_LABEL="en"/>
+    <CONSTRAINT
+        DESCRIPTION="Time subdivision of parent annotation's time interval, no time gaps allowed within this interval" STEREOTYPE="Time_Subdivision"/>
+    <CONSTRAINT
+        DESCRIPTION="Symbolic subdivision of a parent annotation. Annotations refering to the same parent are ordered" STEREOTYPE="Symbolic_Subdivision"/>
+    <CONSTRAINT DESCRIPTION="1-1 association with a parent annotation" STEREOTYPE="Symbolic_Association"/>
+    <CONSTRAINT
+        DESCRIPTION="Time alignable annotations within the parent annotation's time interval, gaps are allowed" STEREOTYPE="Included_In"/>
+</ANNOTATION_DOCUMENT>
