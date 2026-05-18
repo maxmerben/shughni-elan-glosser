@@ -37,7 +37,7 @@ def postag_text(glossed_filename: str):
                     if not re.fullmatch(pos["gloss"], morpheme.gloss):
                         continue
                     morpheme.pos = pos["pos"]
-                    if re.match("\? ", pos["pos"]):
+                    if re.match(r"\?", pos["pos"]):
                         s_counter += 1
                     else:
                         g_counter += 1
@@ -56,6 +56,8 @@ def postag_text(glossed_filename: str):
         text.to_eaf(filepath=new_filename, suffix="", update_eaf=True)
 
         print(f"\nГотово! Итоговый файл называется '{new_filename}'.\n")
+
+        return new_filename
     
     except FileNotFoundError:
         print("\nОШИБКА! Такой eaf-файл не найден.\n")

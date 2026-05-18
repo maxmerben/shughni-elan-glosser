@@ -51,18 +51,18 @@ def gloss_text(orig_filename: str):
                 token_text = cx.depunct(token.token)
                 token.ana = [cx.Analysis(morphemes=[], back_token=token, back_sent=sentence, back_text=text)]
 
-                prefix = re.search("[^\-\=]+[\-\=]", token.token)
+                prefix = re.search("[^-=]+[-=]", token.token)
 
                 if prefix:
                     prefix = prefix[0]
                     if prefix[:-1].lower() in prefixes:
                         token_text = token_text[:len(prefix)]+"%" + re.sub(
-                            "\-", "%-", re.sub("\=", "#=", token_text[len(prefix):])
+                            "-", "%-", re.sub("=", "#=", token_text[len(prefix):])
                         )
                     else:
-                        token_text = re.sub("\-", "%-", re.sub("\=", "#=", token_text))
+                        token_text = re.sub("-", "%-", re.sub("=", "#=", token_text))
                 else:
-                    token_text = re.sub("\-", "%-", re.sub("\=", "#=", token_text))
+                    token_text = re.sub("-", "%-", re.sub("=", "#=", token_text))
                 
                 
                 morphs_split = re.split("[#%]", token_text)
@@ -74,7 +74,7 @@ def gloss_text(orig_filename: str):
                     try:
                         morph_for_search = re.sub("=", "-", morph)
                         gloss = gloss_dict[morph_for_search][_gloss]
-                        if re.match("\?", gloss):
+                        if re.match(r"\?", gloss):
                             s_counter += 1
                         else:
                             g_counter += 1
@@ -112,18 +112,18 @@ def gloss_text(orig_filename: str):
                 w_id = w[0]
                 w_text = depunct(w[1][1])
 
-                prefix = re.search("[^\-\=]+[\-\=]", w_text)
+                prefix = re.search("[^-=]+[-=]", w_text)
 
                 if prefix:
                     prefix = prefix[0]
                     if prefix[:-1].lower() in prefixes:
                         w_text = w_text[:len(prefix)]+"%" + re.sub(
-                            "\-", "%-", re.sub("\=", "#=", w_text[len(prefix):])
+                            "-", "%-", re.sub("=", "#=", w_text[len(prefix):])
                         )
                     else:
-                        w_text = re.sub("\-", "%-", re.sub("\=", "#=", w_text))
+                        w_text = re.sub("-", "%-", re.sub("=", "#=", w_text))
                 else:
-                    w_text = re.sub("\-", "%-", re.sub("\=", "#=", w_text))
+                    w_text = re.sub("-", "%-", re.sub("=", "#=", w_text))
                 
                 morphemization = re.split("[#%]", w_text)
                 
@@ -154,7 +154,7 @@ def gloss_text(orig_filename: str):
                 try:
                     morph = re.sub("=", "-", m[1][1])
                     gloss = gloss_dict[morph][_gloss]
-                    if re.match("\?", gloss):
+                    if re.match(r"\?", gloss):
                         s_counter += 1
                     else:
                         g_counter += 1
@@ -192,6 +192,8 @@ def gloss_text(orig_filename: str):
         text.to_eaf(filepath=new_filename, suffix="", update_eaf=True)
 
         print(f"\nГотово! Итоговый файл называется '{new_filename}'.\n")
+
+        return new_filename
     
     except FileNotFoundError:
         print("\nОШИБКА! Такой eaf-файл не найден.\n")
