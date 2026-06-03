@@ -1117,12 +1117,15 @@ class TokenSearch():
         Returns:
             list of tuples: Each tuple is (Analysis, count), sorted by frequency.
         """
+        spisok = []
         for t in self._tokens:
             if t.ana:
                 if len(t.ana)>1:
                     raise ValueError("TokenSearch.analyses requires that all Tokens have only one analysis!")
+                if len(t.ana)==1 and t.ana[0]:
+                    spisok.append(t.ana[0].view())
         
-        return Counter([t.ana[0].view() for t in self._tokens]).most_common()
+        return Counter(spisok).most_common()
     
     def regloss(self, gloss_index_string: str, pos_string=None):
         """
@@ -2696,8 +2699,8 @@ class Sentence():
                 speaker = f"[{self.meta['speaker']}]"
             speaker = speaker.strip("[](){}")
             speaker_size = len(speaker)
-            return f"[{speaker}] {text}\n   {' '*speaker_size}{trans_string}"
-        return f"{text}\n{trans_string}"
+            return f"[{speaker}] {text}   {' '*speaker_size}{trans_string}"
+        return f"{text}{trans_string}"
         
     def to_glossing(self):
         """
@@ -2755,8 +2758,8 @@ class Sentence():
         slovar = self.to_dict()
         
         gla = "\\gla " + slovar["sentence"] + " //\n"
-        glb = "\\glb " + " ".join(slovar["morph_strings"]) + " //\n"
-        glc = "\\glc " + " ".join(slovar["gloss_strings"]) + " //\n"
+        glb = "\\glb " + " ".join(slovar["morphs"]) + " //\n"
+        glc = "\\glc " + " ".join(slovar["glosses"]) + " //\n"
         glft = ""
         if slovar["translation"]:
             glft = "\\glft ‘" + slovar["translation"] + "’ //\n"
@@ -3609,9 +3612,20 @@ class Text():
         for s in self.sentences:
             s.convert_orthography(converter, force=force)
     
-    def to_print(self):
+    def to_print(self, speaker=False):
+        """
+        Return a pretty formatted text containing Sentence.text and Sentence.translation for each sentence.
+
+        Parameters:
+            speaker (bool or str): If True, add speaker label from Sentence.meta['speaker'].
+                If str, use the string as speaker label.
+
+        Returns:
+            str: Formatted string.
+        """
         sorted_sentences = self.sort_sentences(by="time", inplace=False)
-        return "\n\n".join([s.to_print() for s in sorted_sentences])
+        if sorted_sentences:
+            return "\n\n".join([s.to_print(speaker=speaker) for s in sorted_sentences])
     
     def to_glossing(self):
         """
