@@ -443,7 +443,8 @@ def create_annotation(eaf, content, convert=False, target="orig", base=None, for
                 content.morph_aid, content.pos, None, None)
 
     else:
-        raise TypeError("Function create_annotation() requires that the argument `content` is a Sentence, Token or a Morpheme!")
+        raise TypeError(f"""Function create_annotation() requires that the argument `content` is a Sentence, Token or a Morpheme! """ \
+                        f"""You supplied an object {content} of type {type(content)}""")
 
 ########################
 
@@ -2235,6 +2236,7 @@ class Sentence():
         clean(): Clean whitespace in the beginning and in the end
             of the string and collapse double spaces to single spaces
             for Sentence.text, Sentence.translation and all Sentence.tokens.
+        is_clean(): Check whether the Sentence is clean using method .clean().
         search_morpheme(gloss=None, morph=None, pos=None, gloss_type=None, full=False):
             Search for a Morpheme in the Sentence.
         search_morphemechain(gloss_index_string=None, pos_string=None, _query=None):
@@ -2440,6 +2442,8 @@ class Sentence():
             bool or str: True if Sentence.tokens correspond to Sentence.text,
                 otherwise either "wrong number of tokens" or "wrong tokens".
         """
+        if len(self.tokens) == 0:
+            return "no tokens"
         text = Tokenizer(mode="glue_punct").tokenize(self.text)
         if len(text) != len(self.tokens):
             if not quiet:
@@ -2523,18 +2527,25 @@ class Sentence():
         elif seconds:
             warnings.warn(message=f"The Sentence does not have para_alignment for audio!\n", stacklevel=4)
     
-    def clean(self):
+    def clean(self, clean_tokens=True, clean_translation=True):
         """
         Clean whitespace in the beginning and in the end
             of the string and collapse double spaces to single spaces.
-            This is performed for the Sentence.text and all Sentence.tokens.
+
+        Parameters:
+            tokens (bool): If True, cleaning is performed not only for the Sentence.text
+                but also for all Sentence.tokens (default: True).
+            translation (bool): If True, cleaning is performed not only for the Sentence.text
+                but also for its Sentence.translation (default: True).
         """
-        for i in range(len(self.tokens)):
-            self.tokens[i].clean()
+        if clean_tokens:
+            for i in range(len(self.tokens)):
+                self.tokens[i].clean()
         self.text = _clean(self.text)
-        if self.translation:
-            for key in self.translation:
-                self.translation[key] = _clean(self.translation[key])
+        if clean_translation:
+            if self.translation:
+                for key in self.translation:
+                    self.translation[key] = _clean(self.translation[key])
 
     def search_morpheme(self, gloss=None, morph=None, pos=None, gloss_type=None, full=False):
         """
@@ -2894,10 +2905,15 @@ class Sentence():
                           if False, no errors will be raised
         """
         if force == True:
-            if self.tokenization_is_correct() != True:
-                raise ValueError("Sentence.make_off_values() can only be performed if Sentence.tokenization_is_correct() is True!")
+            correct = self.tokenization_is_correct()
+            if correct != True:
+                if correct == "no tokens":
+                    pass
+                else:
+                    raise ValueError("Sentence.make_off_values() can only be performed if Sentence.tokenization_is_correct() is True!")
             if _clean(self.text) != self.text:
-                raise ValueError("Sentence.make_off_values() can only be performed if Sentence has been “cleaned” by Sentence.clean()!")
+                raise ValueError("Sentence.make_off_values() can only be performed if Sentence has been “cleaned” by Sentence.clean()!" \
+                                 f"\nProblem arose in this sentence: {self}")
         
         i = 0
         for token in self.tokens:
@@ -3092,20 +3108,25 @@ class Text():
                                 token=t_item[1][1], ana=ana,
                                 token_aid=t_item[0]))
                     
-                    if i in range(len(trans_items)) and trans_items[i]:
-                        translation, trans_aid = {trans_lang: trans_items[i][1][1]}, trans_items[i][0]
-                    else:
-                        translation, trans_aid = None, None
-                    
-                    if i in range(len(original_items)) and original_items[i]:
-                        original, original_aid = original_items[i][1][1], original_items[i][0]
-                    else:
-                        original, original_aid = None, None
-                    
-                    if i in range(len(comment_items)) and comment_items[i]:
-                        comment, comment_aid = comment_items[i][1][1], comment_items[i][0]
-                    else:
-                        comment, comment_aid = None, None
+                    sent_aid = sent_items[i][0]
+                    translation, trans_aid = None, None
+                    original, original_aid = None, None
+                    comment, comment_aid = None, None
+
+                    for trans_item in trans_items:
+                        if sent_aid == trans_item[1][0]:
+                            translation, trans_aid = {trans_lang: trans_item[1][1]}, trans_item[0]
+                            break
+
+                    for original_item in original_items:
+                        if sent_aid == original_item[1][0]:
+                            original, original_aid = original_item[1][1], original_item[0]
+                            break
+
+                    for comment_item in comment_items:
+                        if sent_aid == comment_item[1][0]:
+                            comment, comment_aid = comment_item[1][1], comment_item[0]
+                            break
                     
                     off_start = self.eaf.timeslots[sent_items[i][1][0]]
                     off_end = self.eaf.timeslots[sent_items[i][1][1]]
@@ -3116,7 +3137,7 @@ class Text():
                         translation = translation,
                         original = original,
                         comment = comment,
-                        sent_aid = sent_items[i][0],
+                        sent_aid = sent_aid,
                         trans_aid = trans_aid,
                         original_aid = original_aid,
                         comment_aid = comment_aid,
