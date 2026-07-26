@@ -48,47 +48,50 @@ def gloss_text(orig_filename: str):
             sentence.tokens = [cx.Token(
                 token=t, back_sent=sentence, back_text=text) for t in re.split("[ \t]+", sentence.text.strip())]
             for token in sentence.tokens:
-                token_text = cx.depunct(token.token)
-                token.ana = [cx.Analysis(morphemes=[], back_token=token, back_sent=sentence, back_text=text)]
+                if re.fullmatch("[-=]+", token.token):
+                    prefix, token_text = None, token.token
+                else:
+                    token_text = cx.depunct(token.token)
+                    token.ana = [cx.Analysis(morphemes=[], back_token=token, back_sent=sentence, back_text=text)]
 
-                prefix = re.search("[^-=]+[-=]", token.token)
+                    prefix = re.search("[^-=]+[-=]", token.token)
 
-                if prefix:
-                    prefix = prefix[0]
-                    if prefix[:-1].lower() in prefixes:
-                        token_text = token_text[:len(prefix)]+"%" + re.sub(
-                            "-", "%-", re.sub("=", "#=", token_text[len(prefix):])
-                        )
+                    if prefix:
+                        prefix = prefix[0]
+                        if prefix[:-1].lower() in prefixes:
+                            token_text = token_text[:len(prefix)]+"%" + re.sub(
+                                "-", "%-", re.sub("=", "#=", token_text[len(prefix):])
+                            )
+                        else:
+                            token_text = re.sub("-", "%-", re.sub("=", "#=", token_text))
                     else:
                         token_text = re.sub("-", "%-", re.sub("=", "#=", token_text))
-                else:
-                    token_text = re.sub("-", "%-", re.sub("=", "#=", token_text))
-                
-                
-                morphs_split = re.split("[#%]", token_text)
-                for morph in morphs_split:
-                    if len(morph) < 1:
-                        continue
-                    morph=cx.depunct(morph).lower()
+                    
+                    
+                    morphs_split = re.split("[#%]", token_text)
+                    for morph in morphs_split:
+                        if len(morph) < 1:
+                            continue
+                        morph=cx.depunct(morph).lower()
 
-                    try:
-                        morph_for_search = re.sub("=", "-", morph)
-                        gloss = gloss_dict[morph_for_search][_gloss]
-                        if re.match(r"\?", gloss):
-                            s_counter += 1
-                        else:
-                            g_counter += 1
+                        try:
+                            morph_for_search = re.sub("=", "-", morph)
+                            gloss = gloss_dict[morph_for_search][_gloss]
+                            if re.match(r"\?", gloss):
+                                s_counter += 1
+                            else:
+                                g_counter += 1
 
-                    except KeyError:
-                        gloss = "?"
-                        pass
+                        except KeyError:
+                            gloss = "?"
+                            pass
 
-                    token.ana[0].morphemes.append(cx.Morpheme(morph=morph, gloss=gloss,
-                                           back_ana=token.ana[0], back_token=token,
-                                           back_sent=sentence, back_text=text))
+                        token.ana[0].morphemes.append(cx.Morpheme(morph=morph, gloss=gloss,
+                                            back_ana=token.ana[0], back_token=token,
+                                            back_sent=sentence, back_text=text))
 
-                token.token = re.sub("-", "", token.token)
-                #token.token = re.sub("=", "-", token.token)
+                    token.token = re.sub("-", "", token.token)
+                    #token.token = re.sub("=", "-", token.token)
             
             sentence.text = re.sub("-", "", sentence.text)
             #sentence.text = re.sub("=", "-", sentence.text)
