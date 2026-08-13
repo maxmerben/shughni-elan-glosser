@@ -48,8 +48,14 @@ def gloss_text(orig_filename: str):
             sentence.tokens = [cx.Token(
                 token=t, back_sent=sentence, back_text=text) for t in re.split("[ \t]+", sentence.text.strip())]
             for token in sentence.tokens:
+
+                # if token consists only of hyphen or equal sign -> do not make a token
                 if re.fullmatch("[-=]+", token.token):
                     prefix, token_text = None, token.token
+                # if token consists only of number (+ dot) -> do not make a token
+                elif re.fullmatch(r"\(?\d+[\.\)]?", token.token):
+                    prefix, token_text = None, token.token
+                
                 else:
                     token_text = cx.depunct(token.token)
                     token.ana = [cx.Analysis(morphemes=[], back_token=token, back_sent=sentence, back_text=text)]
