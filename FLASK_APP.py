@@ -88,6 +88,16 @@ INDEX_CONTENT = """
   <input type=file name=file accept=".eaf" required>
   <input type=submit value=Upload>
 </form>
+<br>
+
+<hr>
+
+<small><ul>
+<li>Last updated: <b>2026-08-16</b></li>
+<li><a href="https://github.com/maxmerben/shughni-elan-glosser">GitHub</a></li>
+<li><a href="https://docs.google.com/document/d/1CbnCCTggcnroa81ndwPQWw43j83nGw1GCKQJwcLtJyE/edit">Guide to tokenizer</a></li>
+<li><a href="https://drive.google.com/file/d/1GIa3JtFA8nU5wHrT6S3UEjHlHQlxHTGn/view">Glosses</a></li>
+</ul></small>
 """
 
 
