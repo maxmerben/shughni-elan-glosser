@@ -30,6 +30,8 @@ def postag_text(glossed_filename: str):
         g_counter, s_counter = 0, 0
         
         for token in text.tokens:
+            if not token:
+                continue
             for morpheme in token[0]:
                 for pos in pos_list:
                     if not re.fullmatch(pos["morph"], morpheme.morph):
