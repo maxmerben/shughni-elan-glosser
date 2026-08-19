@@ -30,20 +30,19 @@ def postag_text(glossed_filename: str):
         g_counter, s_counter = 0, 0
         
         for token in text.tokens:
-            if not token:
-                continue
-            for morpheme in token[0]:
-                for pos in pos_list:
-                    if not re.fullmatch(pos["morph"], morpheme.morph):
-                        continue
-                    if not re.fullmatch(pos["gloss"], morpheme.gloss):
-                        continue
-                    morpheme.pos = pos["pos"]
-                    if re.match(r"\?", pos["pos"]):
-                        s_counter += 1
-                    else:
-                        g_counter += 1
-                    break
+            if token and token[0]:
+                for morpheme in token[0]:
+                    for pos in pos_list:
+                        if not re.fullmatch(pos["morph"], morpheme.morph):
+                            continue
+                        if not re.fullmatch(pos["gloss"], morpheme.gloss):
+                            continue
+                        morpheme.pos = pos["pos"]
+                        if re.match(r"\?", pos["pos"]):
+                            s_counter += 1
+                        else:
+                            g_counter += 1
+                        break
         
         print(f"> Проставлены POS-теги "
             f"(теги проставлены для {g_counter} морфем, "
